@@ -1,45 +1,21 @@
 class Solution {
 public:
     int search(vector<int>& nums, int target) {
-        int n = nums.size();
-        int s = 0, e = n - 1;
-        int m=s+(e-s)/2;
-        
-        while (s < e) {
-            int m = s + (e - s) / 2; 
-            
-            if (nums[m] >= nums[0]) {  
-                s = m + 1;
-            } else { 
-                e = m;
+        int n=nums.size();
+        int ans=0;
+        bool t=false;
+        for(int i=0;i<n;i++){
+            if(nums[i]==target){
+                ans=i;
+                t=true;
+                break;
             }
+        }
+        if(!t){
+            return -1;
+
         } 
-        int pivot=s;
-        s=0;
-        e=n-1;
-        if (nums[pivot]<=target&&target<=nums[n-1]){
-            s=pivot;
-        }
-        else {
-            e=pivot-1;
-        }
-        
-         while(s<=e){
-             int m=s+(e-s)/2;
-                if (nums[m]==target){
-                    return m;
-                    s=m+1;
-                }
-                else if (target>nums[m]){
-                    
-                    s=m+1;
-                }
-                else{
-                    
-                    e=m-1;
-                    }
-               
-            }
-       return -1;
+         return ans;
+
     }
 };
