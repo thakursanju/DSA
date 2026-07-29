@@ -1,37 +1,29 @@
 class Solution {
 public:
     int maxSubarraySumCircular(vector<int>& nums) {
-        int n = nums.size();
 
-        vector<int> arr(2 * n);
-        for (int i = 0; i < n; i++) {
-            arr[i] = nums[i];
-            arr[i + n] = nums[i];
+        int total = 0;
+
+        int curMax = 0, maxSum = INT_MIN;
+        int curMin = 0, minSum = INT_MAX;
+
+        for (int x : nums) {
+
+            total += x;
+
+            // Maximum subarray sum (Kadane)
+            curMax = max(x, curMax + x);
+            maxSum = max(maxSum, curMax);
+
+            // Minimum subarray sum (Reverse Kadane)
+            curMin = min(x, curMin + x);
+            minSum = min(minSum, curMin);
         }
 
-        vector<long long> prefix(2 * n + 1, 0);
-        for (int i = 0; i < 2 * n; i++)
-            prefix[i + 1] = prefix[i] + arr[i];
+        // All numbers are negative
+        if (maxSum < 0)
+            return maxSum;
 
-        deque<int> dq;
-        dq.push_back(0);
-
-        long long ans = LLONG_MIN;
-
-        for (int i = 1; i <= 2 * n; i++) {
-
-            while (!dq.empty() && dq.front() < i - n)
-                dq.pop_front();
-
-            if (!dq.empty())
-                ans = max(ans, prefix[i] - prefix[dq.front()]);
-
-            while (!dq.empty() && prefix[dq.back()] >= prefix[i])
-                dq.pop_back();
-
-            dq.push_back(i);
-        }
-
-        return (int)ans;
+        return max(maxSum, total - minSum);
     }
 };
