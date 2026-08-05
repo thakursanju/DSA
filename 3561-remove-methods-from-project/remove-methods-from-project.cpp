@@ -1,38 +1,34 @@
 class Solution {
 public:
+    void dfs(int node, vector<int> adj[], vector<int> &vis) {
+        vis[node] = 1;
+        for(auto &i : adj[node]) {
+            if(!vis[i]) {
+                dfs(i, adj, vis);
+            }
+        }
+    }
     vector<int> remainingMethods(int n, int k, vector<vector<int>>& invocations) {
-
-        vector<vector<int>> adj(n);
-
-        for (auto &e : invocations)
-            adj[e[0]].push_back(e[1]);
-
+        vector<int> adj[n];
+        for(auto & i : invocations) {
+            int u = i[0];
+            int v = i[1];
+            adj[u].push_back(v);
+        }
         vector<int> vis(n, 0);
-
-        function<void(int)> dfs = [&](int u) {
-            vis[u] = 1;
-            for (int v : adj[u])
-                if (!vis[v]) dfs(v);
-        };
-
-        dfs(k);
-
-        // Check if any outside method calls a suspicious one
-        for (auto &e : invocations) {
-            int u = e[0], v = e[1];
-            if (!vis[u] && vis[v]) {
-                vector<int> ans;
-                for (int i = 0; i < n; i++)
-                    ans.push_back(i);
+        dfs(k, adj, vis);
+        vector<int> ans;
+        for(auto &i : invocations) {
+            int u = i[0];
+            int v = i[1];
+            if(!vis[u] && vis[v]) {
+                for(int i = 0; i < n; i++) ans.push_back(i);
                 return ans;
             }
         }
-
-        vector<int> ans;
-        for (int i = 0; i < n; i++)
-            if (!vis[i])
-                ans.push_back(i);
-
+        for(int i = 0; i < n; i++) {
+            if(!vis[i]) ans.push_back(i);
+        }
         return ans;
     }
 };
